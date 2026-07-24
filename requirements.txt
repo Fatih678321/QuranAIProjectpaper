@@ -1,0 +1,14 @@
+torch
+torchaudio
+transformers
+datasets
+accelerate
+evaluate
+jiwer
+librosa
+soundfile
+sounddevice
+tabulate
+pandas
+numpy
+torchcodec
