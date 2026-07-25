@@ -10,7 +10,7 @@ Project ini adalah penelitian awal (proof of concept) yang bertujuan untuk melih
 
 Whisper pada dasarnya dibuat untuk mengenali ucapan manusia dalam berbagai bahasa. Pada penelitian ini, model tersebut di-*fine-tune* memakai dataset kecil yang hanya berisi beberapa huruf Hijaiyah.
 
-Project ini adalah langkah pertama menuju AI yang nanti akan mampu membantu membaca Al-Qur'an.
+Project ini adalah langkah pertama menuju AI yang nanti akan mampu membantu mengkoreksi bacaan Al-Qur'an.
 
 ---
 
