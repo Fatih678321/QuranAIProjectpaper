@@ -7,13 +7,7 @@ Menggunakan Character Error Rate (CER)
 sesuai task pengenalan huruf hijaiyah.
 """
 
-import QuranAIProjectpaper.evaluate as evaluate
-
-# =====================================================
-# Load Metric
-# =====================================================
-
-cer_metric = evaluate.load("cer")
+from jiwer import cer
 
 
 # =====================================================
@@ -51,11 +45,8 @@ def compute_metrics(pred, processor):
         skip_special_tokens=True
     )
 
-    cer = cer_metric.compute(
-        predictions=pred_str,
-        references=label_str
-    )
+    cer_score = cer(label_str, pred_str)
 
     return {
-        "cer": cer
+        "cer": cer_score
     }

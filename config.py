@@ -10,6 +10,7 @@ Project: Fine-Tuning Whisper For
 Hijaiyah Letters Recognition
 """
 
+from dataclasses import dataclass
 from pathlib import Path
 import torch
 
@@ -56,6 +57,56 @@ TASK = "transcribe"
 SAMPLE_RATE = 16000
 
 # =====================================================
+# HIJAIYAH CLASSES
+# =====================================================
+
+
+@dataclass(frozen=True)
+class HijaiyahClass:
+    """The canonical dataset and display details for one recognised letter."""
+
+    folder: str
+    transcription: str
+    display_name: str
+
+
+# Keep this order consistent everywhere the project presents a letter menu.
+HIJAIYAH_CLASSES = (
+    HijaiyahClass("alif", "اَ", "Alif"),
+    HijaiyahClass("ba", "بَ", "Ba"),
+    HijaiyahClass("ta", "تَ", "Ta"),
+    HijaiyahClass("tsa", "ثَ", "Tsa"),
+    HijaiyahClass("ja", "جَ", "Ja"),
+    HijaiyahClass("ha", "حَ", "Ha"),
+    HijaiyahClass("kha", "خَ", "Kha"),
+    HijaiyahClass("da", "دَ", "Da"),
+    HijaiyahClass("dza", "ذَ", "Dza"),
+    HijaiyahClass("ra", "رَ", "Ra"),
+    HijaiyahClass("za", "زَ", "Za"),
+    HijaiyahClass("sa", "سَ", "Sa"),
+    HijaiyahClass("sya", "شَ", "Sya"),
+    HijaiyahClass("sha", "صَ", "Sha"),
+    HijaiyahClass("dha", "ضَ", "Dha"),
+    HijaiyahClass("tho", "طَ", "Tho"),
+    HijaiyahClass("zha", "ظَ", "Zha"),
+    HijaiyahClass("ain", "عَ", "Ain"),
+    HijaiyahClass("gha", "غَ", "Gha"),
+    HijaiyahClass("fa", "فَ", "Fa"),
+    HijaiyahClass("qo", "قَ", "Qo"),
+    HijaiyahClass("ka", "كَ", "Ka"),
+    HijaiyahClass("la", "لَ", "La"),
+    HijaiyahClass("ma", "مَ", "Ma"),
+    HijaiyahClass("na", "نَ", "Na"),
+    HijaiyahClass("hha", "هَ", "Hha"),
+    HijaiyahClass("wa", "وَ", "Wa"),
+    HijaiyahClass("ya", "يَ", "Ya"),
+)
+
+EXPECTED_TRANSCRIPTIONS = tuple(
+    letter.transcription for letter in HIJAIYAH_CLASSES
+)
+
+# =====================================================
 # TRAINING
 # =====================================================
 
@@ -84,6 +135,8 @@ LOAD_BEST_MODEL_AT_END = True
 EVALUATION_STRATEGY = "epoch"
 
 SAVE_STRATEGY = "epoch"
+
+CROSS_VALIDATION_FOLDS = 5
 
 # =====================================================
 # HARDWARE

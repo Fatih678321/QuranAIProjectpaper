@@ -14,6 +14,8 @@ Tasks:
 from datasets import load_dataset, Audio, Features, Value
 from transformers import WhisperProcessor
 
+from audio_utils import downmix_to_mono
+
 from config import (
     TRAIN_CSV,
     TEST_CSV,
@@ -46,9 +48,10 @@ def prepare_dataset(batch):
     """
 
     audio = batch["audio"]
+    mono_audio = downmix_to_mono(audio["array"])
 
     batch["input_features"] = processor.feature_extractor(
-        audio["array"],
+        mono_audio,
         sampling_rate=audio["sampling_rate"],
     ).input_features[0]
 
@@ -63,13 +66,8 @@ def prepare_dataset(batch):
 # Load & Prepare Dataset
 # =====================================================
 
-def load_and_prepare_dataset():
-    """
-    Returns
-    -------
-    DatasetDict
-        Processed train and test datasets.
-    """
+def load_dataset_splits():
+    """Load raw dataset splits and retain their transcriptions for validation."""
 
     features = Features({
         "audio": Audio(sampling_rate=SAMPLE_RATE),
@@ -85,13 +83,31 @@ def load_and_prepare_dataset():
         features=features,
     )
 
-    dataset = dataset.map(
+    # Save transcriptions before map removes source columns.
+    split_class_labels = {
+        split_name: dataset[split_name]["transcription"]
+        for split_name in ("train", "test")
+    }
+
+    return dataset, split_class_labels
+
+
+def prepare_loaded_dataset(dataset):
+    """Convert raw audio/transcription splits into Whisper model features."""
+    return dataset.map(
         prepare_dataset,
         remove_columns=dataset["train"].column_names,
         desc="Preprocessing Dataset",
     )
 
-    return dataset
+
+def load_and_prepare_dataset():
+    """
+    Return processed data and raw labels for callers that do not need a
+    pre-processing validation step.
+    """
+    dataset, split_class_labels = load_dataset_splits()
+    return prepare_loaded_dataset(dataset), split_class_labels
 
 
 # =====================================================
@@ -100,7 +116,7 @@ def load_and_prepare_dataset():
 
 def main():
 
-    dataset = load_and_prepare_dataset()
+    dataset, _ = load_and_prepare_dataset()
 
     print("=" * 60)
     print(dataset)

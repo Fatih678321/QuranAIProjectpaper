@@ -31,26 +31,35 @@ Project ini **belum ditujukan untuk mengenali ayat Al-Qur'an**, tetapi hanya seb
 
 Dataset yang digunakan terdiri dari:
 
-- 100 file audio
+- 600 file audio yang dipilih untuk eksperimen
 - format WAV
-- mono
+- mono atau stereo (diubah menjadi mono saat preprocessing)
 - 16 kHz
 - durasi 1 detik
 
 Huruf yang digunakan:
 
-- اَ (Alif)
-- بَ (Ba)
-- تَ (Ta)
-- ثَ (Tsa)
-- جَ (Ja)
+- اَ (Alif), بَ (Ba), تَ (Ta), ثَ (Tsa), جَ (Ja)
+- حَ (Ha), خَ (Kha), دَ (Da), ذَ (Dza), رَ (Ra)
+- زَ (Za), سَ (Sa), شَ (Sya), صَ (Sha), ضَ (Dha)
 
-Masing-masing huruf memiliki 20 sampel audio.
+Masing-masing huruf memiliki 40 sampel audio. Empat file tambahan
+`ta_041.wav` sampai `ta_044.wav` tidak termasuk dalam eksperimen ini.
 
 Dataset dibagi menjadi:
 
-- Training : 80 audio
-- Testing : 20 audio
+- Training : 480 audio
+- Testing : 120 audio
+
+Manifest dibangun ulang dengan seed 42. Assignment lima kelas lama tetap
+dipertahankan; sepuluh kelas tambahan masing-masing dibagi menjadi 32 audio
+training dan 8 audio holdout. Training menggunakan 5-fold stratified
+cross-validation pada 480 audio training. Sebanyak 120 audio testing tetap
+menjadi holdout dan tidak digunakan saat training atau pemilihan fold. Fold
+dengan validation CER terendah disimpan ke `models/best_model`.
+
+Model di `models/best_model` yang sudah ada hanya mempelajari kelas lama.
+Jalankan ulang `python train.py` sebelum menggunakan inference untuk 15 kelas.
 
 ---
 
@@ -255,6 +264,7 @@ pip install -r requirements.txt
 ## Training
 
 ```
+python build_manifests.py
 python train.py
 ```
 

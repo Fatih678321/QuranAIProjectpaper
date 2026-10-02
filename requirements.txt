@@ -11,4 +11,5 @@ sounddevice
 tabulate
 pandas
 numpy
+scikit-learn
 torchcodec
